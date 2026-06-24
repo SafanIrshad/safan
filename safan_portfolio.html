@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safan Irshad | UI/UX & Visual Designer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        primary: '#1a1a2e',
+                        secondary: '#16213e',
+                        accent: '#0f3460',
+                        highlight: '#e94560',
+                        warm: '#f5a623',
+                        soft: '#f8f9fa',
+                        muted: '#6c757d',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #ffffff;
+            color: #1a1a2e;
+            overflow-x: hidden;
+        }
+
+        /* Smooth scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #1a1a2e; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #e94560; }
+
+        /* Navigation */
+        .nav-scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 1px 20px rgba(0,0,0,0.05);
+        }
+
+        /* Hero text reveal */
+        .text-reveal {
+            overflow: hidden;
+        }
+        .text-reveal span {
+            display: inline-block;
+            transform: translateY(100%);
+            opacity: 0;
+        }
+
+        /* Elegant button */
+        .btn-elegant {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .btn-elegant::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%; height: 2px;
+            background: #e94560;
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .btn-elegant:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        /* Card hover */
+        .card-hover {
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Image reveal */
+        .img-reveal {
+            position: relative;
+            overflow: hidden;
+        }
+        .img-reveal::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: #1a1a2e;
+            transform: scaleX(1);
+            transform-origin: right;
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 2;
+        }
+        .img-reveal.revealed::before {
+            transform: scaleX(0);
+        }
+
+        /* Skill progress */
+        .skill-bar {
+            height: 4px;
+            background: #e9ecef;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .skill-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #e94560, #f5a623);
+            border-radius: 2px;
+            width: 0;
+            transition: width 2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Timeline */
+        .timeline-item {
+            position: relative;
+            padding-left: 40px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 8px;
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background: #e94560;
+            border: 3px solid #fff;
+            box-shadow: 0 0 0 3px #e94560;
+        }
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 5px; top: 28px;
+            width: 2px; height: calc(100% - 20px);
+            background: linear-gradient(180deg, #e94560, transparent);
+        }
+        .timeline-item:last-child::after { display: none; }
+
+        /* Parallax */
+        .parallax-bg {
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Number counter */
+        .counter-value {
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Form focus */
+        .form-input:focus {
+            border-color: #e94560;
+            box-shadow: 0 0 0 4px rgba(233, 69, 96, 0.1);
+        }
+
+        /* Mobile menu */
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .mobile-menu.active { transform: translateX(0); }
+
+        /* Subtle grain texture overlay */
+        .grain::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+
+        /* Section divider */
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #e9ecef, transparent);
+        }
+
+        /* Project card overlay */
+        .project-overlay {
+            background: linear-gradient(180deg, transparent 0%, rgba(26, 26, 46, 0.9) 100%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .project-card:hover .project-overlay { opacity: 1; }
+        .project-card:hover img { transform: scale(1.05); }
+
+        /* Link underline animation */
+        .link-underline {
+            position: relative;
+        }
+        .link-underline::after {
+            content: '';
+            position: absolute;
+            bottom: -2px; left: 0;
+            width: 0; height: 2px;
+            background: #e94560;
+            transition: width 0.3s ease;
+        }
+        .link-underline:hover::after { width: 100%; }
+
+        /* Stagger animation helper */
+        .stagger-item {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        .stagger-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+    </style>
+</head>
+<body class="grain">
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <a href="#" class="font-display text-2xl font-bold text-primary tracking-tight">
+                    Safan<span class="text-highlight">.</span>
+                </a>
+
+                <div class="hidden md:flex items-center gap-10">
+                    <a href="#about" class="text-sm font-medium text-muted hover:text-primary transition-colors link-underline">About</a>
+                    <a href="#skills" class="text-sm font-medium text-muted hover:text-primary transition-colors link-underline">Skills</a>
+                    <a href="#projects" class="text-sm font-medium text-muted hover:text-primary transition-colors link-underline">Projects</a>
+                    <a href="#experience" class="text-sm font-medium text-muted hover:text-primary transition-colors link-underline">Experience</a>
+                    <a href="#contact" class="btn-elegant px-6 py-3 bg-primary text-white text-sm font-medium rounded-full hover:bg-highlight transition-colors">
+                        Get in Touch
+                    </a>
+                </div>
+
+                <button id="menuBtn" class="md:hidden p-2">
+                    <i data-lucide="menu" class="w-6 h-6 text-primary"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="mobile-menu fixed inset-0 z-50 bg-white">
+        <div class="flex flex-col h-full p-8">
+            <div class="flex justify-between items-center mb-12">
+                <span class="font-display text-2xl font-bold">Safan.</span>
+                <button id="closeMenu" class="p-2">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <div class="flex flex-col gap-6">
+                <a href="#about" class="mobile-link text-2xl font-display font-medium text-primary">About</a>
+                <a href="#skills" class="mobile-link text-2xl font-display font-medium text-primary">Skills</a>
+                <a href="#projects" class="mobile-link text-2xl font-display font-medium text-primary">Projects</a>
+                <a href="#experience" class="mobile-link text-2xl font-display font-medium text-primary">Experience</a>
+                <a href="#contact" class="mobile-link text-2xl font-display font-medium text-primary">Contact</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="hero" class="min-h-screen flex items-center relative overflow-hidden bg-soft">
+        <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-bl from-gray-100 to-transparent opacity-50"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-highlight/5 rounded-full blur-3xl"></div>
+
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 py-32 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <!-- Left Content -->
+                <div class="order-2 lg:order-1">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm mb-8">
+                        <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                        <span class="text-sm font-medium text-muted">Available for new projects</span>
+                    </div>
+
+                    <h1 class="font-display text-5xl lg:text-7xl font-bold text-primary leading-tight mb-6">
+                        <span class="block overflow-hidden">
+                            <span class="hero-text inline-block">Safan Irshad</span>
+                        </span>
+                    </h1>
+
+                    <p class="text-xl lg:text-2xl text-muted font-light mb-4">
+                        UI/UX & Visual Designer
+                    </p>
+                    <p class="text-lg text-muted/80 leading-relaxed mb-10 max-w-lg">
+                        Crafting intuitive digital experiences and compelling visual identities. 
+                        5+ years of transforming ideas into design that resonates.
+                    </p>
+
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#projects" class="px-8 py-4 bg-primary text-white font-medium rounded-full hover:bg-highlight transition-all duration-300 hover:shadow-lg hover:shadow-highlight/20">
+                            View My Work
+                        </a>
+                        <a href="#contact" class="px-8 py-4 border border-gray-200 text-primary font-medium rounded-full hover:border-highlight hover:text-highlight transition-all duration-300">
+                            Let's Talk
+                        </a>
+                    </div>
+
+                    <div class="flex items-center gap-6 mt-12">
+                        <a href="https://www.behance.net/irshadgraphic" target="_blank" class="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:border-highlight hover:text-highlight transition-all">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M22 7h-7v-2h7v2zm1.726 10c-.442 1.297-2.029 3-5.101 3-3.074 0-5.564-1.729-5.564-5.675 0-3.91 2.325-5.92 5.466-5.92 3.082 0 4.964 1.782 5.375 4.426.078.506.109 1.188.095 2.14h-8.027c.13 3.211 3.483 3.312 4.588 2.029h3.168zm-7.686-4h4.965c-.105-1.547-1.136-2.219-2.477-2.219-1.466 0-2.277.768-2.488 2.219zm-9.574 6.988h-6.466v-14.967h6.953c5.476.081 5.58 5.444 2.72 6.906 3.461 1.26 3.577 8.061-3.207 8.061zm-3.466-8.988h3.584c2.508 0 2.906-3-.312-3h-3.272v3zm3.391 3h-3.391v3.016h3.341c3.055 0 2.868-3.016.05-3.016z"/></svg>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:border-highlight hover:text-highlight transition-all">
+                            <i data-lucide="linkedin" class="w-4 h-4"></i>
+                        </a>
+                        <a href="mailto:Safanirshad@gmail.com" class="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:border-highlight hover:text-highlight transition-all">
+                            <i data-lucide="mail" class="w-4 h-4"></i>
+                        </a>
+                        <a href="tel:+923114610202" class="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:border-highlight hover:text-highlight transition-all">
+                            <i data-lucide="phone" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Image -->
+                <div class="order-1 lg:order-2 flex justify-center">
+                    <div class="relative">
+                        <div class="absolute -inset-4 bg-gradient-to-br from-highlight/20 to-warm/20 rounded-3xl blur-2xl"></div>
+                        <div class="img-reveal relative w-80 h-80 lg:w-96 lg:h-96 rounded-3xl overflow-hidden shadow-2xl">
+                            <img src="Replace_the_face_of_the_202606241418.jpeg" alt="Safan Irshad" class="w-full h-full object-cover">
+                        </div>
+                        <div class="absolute -bottom-6 -right-6 bg-white rounded-2xl shadow-xl p-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 bg-primary rounded-xl flex items-center justify-center">
+                                    <i data-lucide="award" class="w-6 h-6 text-white"></i>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-primary text-lg">5+</p>
+                                    <p class="text-sm text-muted">Years Experience</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- About Section -->
+    <section id="about" class="py-32 bg-white">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-20 items-center">
+                <div class="relative">
+                    <div class="img-reveal rounded-3xl overflow-hidden shadow-xl">
+                        <img src="Replace_the_face_of_the_202606241418.jpeg" alt="Safan Irshad" class="w-full h-[500px] object-cover grayscale hover:grayscale-0 transition-all duration-700">
+                    </div>
+                    <div class="absolute -bottom-8 -left-8 bg-primary text-white rounded-2xl p-6 shadow-xl">
+                        <p class="font-display text-3xl font-bold">50+</p>
+                        <p class="text-sm opacity-80">Projects Completed</p>
+                    </div>
+                </div>
+
+                <div>
+                    <span class="text-sm font-medium text-highlight tracking-widest uppercase mb-4 block">About Me</span>
+                    <h2 class="font-display text-4xl lg:text-5xl font-bold text-primary mb-8 leading-tight">
+                        Designing with purpose, <br>
+                        <span class="text-highlight">creating with passion</span>
+                    </h2>
+                    <p class="text-muted leading-relaxed mb-6 text-lg">
+                        Creative and detail-oriented UI/UX & Visual Designer with 5+ years of experience in branding, 
+                        social media design, website UI/UX, motion graphics, and promotional video production.
+                    </p>
+                    <p class="text-muted leading-relaxed mb-8 text-lg">
+                        Proven ability to design intuitive digital experiences, develop visual identities from scratch, 
+                        and deliver brand-consistent content across multiple platforms. Adept at collaborating with 
+                        cross-functional teams to transform concepts into compelling visual solutions.
+                    </p>
+
+                    <div class="grid grid-cols-3 gap-6">
+                        <div class="text-center p-6 bg-soft rounded-2xl">
+                            <p class="font-display text-3xl font-bold text-primary counter-value" data-target="50">0</p>
+                            <p class="text-sm text-muted mt-1">Projects</p>
+                        </div>
+                        <div class="text-center p-6 bg-soft rounded-2xl">
+                            <p class="font-display text-3xl font-bold text-primary counter-value" data-target="30">0</p>
+                            <p class="text-sm text-muted mt-1">Clients</p>
+                        </div>
+                        <div class="text-center p-6 bg-soft rounded-2xl">
+                            <p class="font-display text-3xl font-bold text-primary counter-value" data-target="5">0</p>
+                            <p class="text-sm text-muted mt-1">Years</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-32 bg-soft">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-20">
+                <span class="text-sm font-medium text-highlight tracking-widest uppercase mb-4 block">Expertise</span>
+                <h2 class="font-display text-4xl lg:text-5xl font-bold text-primary">Skills & Tools</h2>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-16">
+                <!-- Design Skills -->
+                <div>
+                    <h3 class="font-display text-2xl font-bold text-primary mb-10">Design Skills</h3>
+                    <div class="space-y-8">
+                        <div>
+                            <div class="flex justify-between mb-3">
+                                <span class="font-medium text-primary">UI/UX Design</span>
+                                <span class="text-muted text-sm">95%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="95"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-3">
+                                <span class="font-medium text-primary">Visual Communication</span>
+                                <span class="text-muted text-sm">92%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="92"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-3">
+                                <span class="font-medium text-primary">Brand Development</span>
+                                <span class="text-muted text-sm">90%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="90"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-3">
+                                <span class="font-medium text-primary">Motion Design</span>
+                                <span class="text-muted text-sm">88%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="88"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-3">
+                                <span class="font-medium text-primary">Creative Strategy</span>
+                                <span class="text-muted text-sm">85%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="85"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tools -->
+                <div>
+                    <h3 class="font-display text-2xl font-bold text-primary mb-10">Software & Tools</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                            <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                                <span class="font-bold text-sm text-primary">F</span>
+                            </div>
+                            <div>
+                                <p class="font-medium text-primary">Figma</p>
+                                <p class="text-xs text-muted">UI/UX Design</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                            <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                                <span class="font-bold text-sm text-primary">Ai</span>
+                            </div>
+                            <div>
+                                <p class="font-medium text-primary">Illustrator</p>
+                                <p class="text-xs text-muted">Vector Graphics</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                            <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                                <span class="font-bold text-sm text-primary">Ps</span>
+                            </div>
+                            <div>
+                                <p class="font-medium text-primary">Photoshop</p>
+                                <p class="text-xs text-muted">Image Editing</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                            <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                                <span class="font-bold text-sm text-primary">Xd</span>
+                            </div>
+                            <div>
+                                <p class="font-medium text-primary">Adobe XD</p>
+                                <p class="text-xs text-muted">Prototyping</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                            <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                                <span class="font-bold text-sm text-primary">Ae</span>
+                            </div>
+                            <div>
+                                <p class="font-medium text-primary">After Effects</p>
+                                <p class="text-xs text-muted">Motion Graphics</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                            <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                                <span class="font-bold text-sm text-primary">Pr</span>
+                            </div>
+                            <div>
+                                <p class="font-medium text-primary">Premiere Pro</p>
+                                <p class="text-xs text-muted">Video Editing</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                            <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                                <span class="font-bold text-sm text-primary">3D</span>
+                            </div>
+                            <div>
+                                <p class="font-medium text-primary">3ds Max</p>
+                                <p class="text-xs text-muted">3D Modeling</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                            <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                                <span class="font-bold text-sm text-primary">In</span>
+                            </div>
+                            <div>
+                                <p class="font-medium text-primary">InDesign</p>
+                                <p class="text-xs text-muted">Layout</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8">
+                        <h4 class="font-medium text-primary mb-4">Languages</h4>
+                        <div class="flex gap-3">
+                            <span class="px-4 py-2 bg-white rounded-full text-sm text-muted shadow-sm">English</span>
+                            <span class="px-4 py-2 bg-white rounded-full text-sm text-muted shadow-sm">Urdu</span>
+                            <span class="px-4 py-2 bg-white rounded-full text-sm text-muted shadow-sm">Punjabi</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-32 bg-white">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-20">
+                <span class="text-sm font-medium text-highlight tracking-widest uppercase mb-4 block">Portfolio</span>
+                <h2 class="font-display text-4xl lg:text-5xl font-bold text-primary mb-4">Featured Projects</h2>
+                <p class="text-muted max-w-2xl mx-auto">A curated selection of my recent work across branding, UI/UX, and motion design.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Vellay -->
+                <div class="project-card group rounded-2xl overflow-hidden shadow-lg bg-white card-hover">
+                    <div class="relative h-64 overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+                            <span class="font-display text-3xl font-bold text-primary/10">VELLAY</span>
+                        </div>
+                        <div class="project-overlay absolute inset-0 flex items-end p-6">
+                            <div>
+                                <div class="flex gap-2 mb-3">
+                                    <span class="px-3 py-1 bg-white/20 backdrop-blur rounded-full text-xs text-white">Branding</span>
+                                    <span class="px-3 py-1 bg-white/20 backdrop-blur rounded-full text-xs text-white">UI/UX</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-display text-xl font-bold text-primary mb-2">Vellay</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Complete brand identity, app UI/UX, and digital experience for a sports venue booking platform.</p>
+                        <a href="https://www.behance.net/irshadgraphic" target="_blank" class="inline-flex items-center gap-2 text-highlight text-sm font-medium hover:gap-3 transition-all">
+                            View Project <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Hypelet -->
+                <div class="project-card group rounded-2xl overflow-hidden shadow-lg bg-white card-hover">
+                    <div class="relative h-64 overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-rose-50 to-pink-100 flex items-center justify-center">
+                            <span class="font-display text-3xl font-bold text-primary/10">HYPELET</span>
+                        </div>
+                        <div class="project-overlay absolute inset-0 flex items-end p-6">
+                            <div>
+                                <div class="flex gap-2 mb-3">
+                                    <span class="px-3 py-1 bg-white/20 backdrop-blur rounded-full text-xs text-white">Branding</span>
+                                    <span class="px-3 py-1 bg-white/20 backdrop-blur rounded-full text-xs text-white">Web</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-display text-xl font-bold text-primary mb-2">Hypelet</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Complete brand identity from scratch including logo, branding, visual guidelines, and website design.</p>
+                        <a href="https://www.behance.net/irshadgraphic" target="_blank" class="inline-flex items-center gap-2 text-highlight text-sm font-medium hover:gap-3 transition-all">
+                            View Project <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Zizle -->
+                <div class="project-card group rounded-2xl overflow-hidden shadow-lg bg-white card-hover">
+                    <div class="relative h-64 overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-violet-50 to-purple-100 flex items-center justify-center">
+                            <span class="font-display text-3xl font-bold text-primary/10">ZIZLE</span>
+                        </div>
+                        <div class="project-overlay absolute inset-0 flex items-end p-6">
+                            <div>
+                                <div class="flex gap-2 mb-3">
+                                    <span class="px-3 py-1 bg-white/20 backdrop-blur rounded-full text-xs text-white">UI/UX</span>
+                                    <span class="px-3 py-1 bg-white/20 backdrop-blur rounded-full text-xs text-white">Mobile</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-display text-xl font-bold text-primary mb-2">Zizle</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Website and mobile app UI/UX design with social media creatives and marketing materials.</p>
+                        <a href="https://www.behance.net/irshadgraphic" target="_blank" class="inline-flex items-center gap-2 text-highlight text-sm font-medium hover:gap-3 transition-all">
+                            View Project <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Degn & Myth -->
+                <div class="project-card group rounded-2xl overflow-hidden shadow-lg bg-white card-hover">
+                    <div class="relative h-64 overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-emerald-50 to-teal-100 flex items-center justify-center">
+                            <span class="font-display text-3xl font-bold text-primary/10">DEGN</span>
+                        </div>
+                        <div class="project-overlay absolute inset-0 flex items-end p-6">
+                            <div>
+                                <div class="flex gap-2 mb-3">
+                                    <span class="px-3 py-1 bg-white/20 backdrop-blur rounded-full text-xs text-white">Social</span>
+                                    <span class="px-3 py-1 bg-white/20 backdrop-blur rounded-full text-xs text-white">Motion</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-display text-xl font-bold text-primary mb-2">Degn & Myth</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Social media creatives, motion graphics, animations, and website/mobile app interface design.</p>
+                        <a href="https://www.behance.net/irshadgraphic" target="_blank" class="inline-flex items-center gap-2 text-highlight text-sm font-medium hover:gap-3 transition-all">
+                            View Project <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Infographics -->
+                <div class="project-card group rounded-2xl overflow-hidden shadow-lg bg-white card-hover">
+                    <div class="relative h-64 overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-amber-50 to-orange-100 flex items-center justify-center">
+                            <span class="font-display text-3xl font-bold text-primary/10">INFO</span>
+                        </div>
+                        <div class="project-overlay absolute inset-0 flex items-end p-6">
+                            <div>
+                                <div class="flex gap-2 mb-3">
+                                    <span class="px-3 py-1 bg-white/20 backdrop-blur rounded-full text-xs text-white">Infographic</span>
+                                    <span class="px-3 py-1 bg-white/20 backdrop-blur rounded-full text-xs text-white">Visual</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-display text-xl font-bold text-primary mb-2">Infographic Collection</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Virtual Interactive Machine, Research Marketing, Nezy Cannabis, and more infographic designs.</p>
+                        <a href="https://www.behance.net/irshadgraphic" target="_blank" class="inline-flex items-center gap-2 text-highlight text-sm font-medium hover:gap-3 transition-all">
+                            View Project <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Mobile Apps -->
+                <div class="project-card group rounded-2xl overflow-hidden shadow-lg bg-white card-hover">
+                    <div class="relative h-64 overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-cyan-50 to-sky-100 flex items-center justify-center">
+                            <span class="font-display text-3xl font-bold text-primary/10">APPS</span>
+                        </div>
+                        <div class="project-overlay absolute inset-0 flex items-end p-6">
+                            <div>
+                                <div class="flex gap-2 mb-3">
+                                    <span class="px-3 py-1 bg-white/20 backdrop-blur rounded-full text-xs text-white">Mobile</span>
+                                    <span class="px-3 py-1 bg-white/20 backdrop-blur rounded-full text-xs text-white">UI/UX</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-display text-xl font-bold text-primary mb-2">Mobile App Designs</h3>
+                        <p class="text-muted text-sm leading-relaxed mb-4">Pharmacy App, Radio App, Delivery App, Beauty App, Hair Salon App, and more UI/UX designs.</p>
+                        <a href="https://www.behance.net/irshadgraphic" target="_blank" class="inline-flex items-center gap-2 text-highlight text-sm font-medium hover:gap-3 transition-all">
+                            View Project <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-16">
+                <a href="https://www.behance.net/irshadgraphic" target="_blank" class="inline-flex items-center gap-3 px-8 py-4 border-2 border-primary text-primary font-medium rounded-full hover:bg-primary hover:text-white transition-all duration-300">
+                    <span>View Full Portfolio on Behance</span>
+                    <i data-lucide="external-link" class="w-4 h-4"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Experience Section -->
+    <section id="experience" class="py-32 bg-soft">
+        <div class="max-w-5xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-20">
+                <span class="text-sm font-medium text-highlight tracking-widest uppercase mb-4 block">Career</span>
+                <h2 class="font-display text-4xl lg:text-5xl font-bold text-primary">Work Experience</h2>
+            </div>
+
+            <div class="space-y-12">
+                <div class="timeline-item pb-12">
+                    <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-lg transition-shadow">
+                        <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-6">
+                            <div>
+                                <h3 class="font-display text-xl font-bold text-primary">UI/UX & Visual Designer</h3>
+                                <p class="text-highlight font-medium">Voxity</p>
+                            </div>
+                            <span class="text-sm text-muted font-medium">2022 — Present</span>
+                        </div>
+                        <ul class="space-y-3 text-muted">
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-highlight mt-0.5 flex-shrink-0"></i>
+                                <span>Designed visually engaging graphics for digital marketing campaigns and social media</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-highlight mt-0.5 flex-shrink-0"></i>
+                                <span>Created high-quality motion graphics and animations for promotional videos</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-highlight mt-0.5 flex-shrink-0"></i>
+                                <span>Designed intuitive UI/UX experiences for web and mobile applications</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-highlight mt-0.5 flex-shrink-0"></i>
+                                <span>Developed wireframes, prototypes, and user interface designs</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item pb-12">
+                    <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-lg transition-shadow">
+                        <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-6">
+                            <div>
+                                <h3 class="font-display text-xl font-bold text-primary">Graphic Designer</h3>
+                                <p class="text-highlight font-medium">Milli Shoes</p>
+                            </div>
+                            <span class="text-sm text-muted font-medium">2020 — 2021</span>
+                        </div>
+                        <ul class="space-y-3 text-muted">
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-highlight mt-0.5 flex-shrink-0"></i>
+                                <span>Managed social media platforms ensuring consistent brand presence</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-highlight mt-0.5 flex-shrink-0"></i>
+                                <span>Planned, scheduled, and published content across multiple channels</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-highlight mt-0.5 flex-shrink-0"></i>
+                                <span>Created and edited engaging video content for marketing campaigns</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="bg-white rounded-2xl p-8 shadow-sm hover:shadow-lg transition-shadow">
+                        <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-6">
+                            <div>
+                                <h3 class="font-display text-xl font-bold text-primary">Freelance Designer</h3>
+                                <p class="text-highlight font-medium">Independent</p>
+                            </div>
+                            <span class="text-sm text-muted font-medium">Ongoing</span>
+                        </div>
+                        <ul class="space-y-3 text-muted">
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-highlight mt-0.5 flex-shrink-0"></i>
+                                <span>Vellay — Sports venue booking platform branding & UI/UX</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-highlight mt-0.5 flex-shrink-0"></i>
+                                <span>Hypelet — Complete brand identity and website design</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-highlight mt-0.5 flex-shrink-0"></i>
+                                <span>Zizle — Website and mobile app UI/UX design</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-highlight mt-0.5 flex-shrink-0"></i>
+                                <span>Degn & Myth — Social media and motion graphics</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-32 bg-white">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-20">
+                <span class="text-sm font-medium text-highlight tracking-widest uppercase mb-4 block">Contact</span>
+                <h2 class="font-display text-4xl lg:text-5xl font-bold text-primary mb-4">Let's Work Together</h2>
+                <p class="text-muted max-w-2xl mx-auto">Have a project in mind? I'd love to hear about it. Let's create something amazing.</p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-16 max-w-5xl mx-auto">
+                <div>
+                    <h3 class="font-display text-2xl font-bold text-primary mb-8">Get in Touch</h3>
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-4 group">
+                            <div class="w-12 h-12 bg-soft rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-highlight group-hover:text-white transition-colors">
+                                <i data-lucide="mail" class="w-5 h-5 text-highlight group-hover:text-white transition-colors"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-primary mb-1">Email</p>
+                                <a href="mailto:Safanirshad@gmail.com" class="text-muted hover:text-highlight transition-colors">Safanirshad@gmail.com</a>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 group">
+                            <div class="w-12 h-12 bg-soft rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-highlight group-hover:text-white transition-colors">
+                                <i data-lucide="phone" class="w-5 h-5 text-highlight group-hover:text-white transition-colors"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-primary mb-1">Phone</p>
+                                <a href="tel:+923114610202" class="text-muted hover:text-highlight transition-colors">+92 311 461 0202</a>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 group">
+                            <div class="w-12 h-12 bg-soft rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-highlight group-hover:text-white transition-colors">
+                                <i data-lucide="globe" class="w-5 h-5 text-highlight group-hover:text-white transition-colors"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-primary mb-1">Behance</p>
+                                <a href="https://www.behance.net/irshadgraphic" target="_blank" class="text-muted hover:text-highlight transition-colors">behance.net/irshadgraphic</a>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 group">
+                            <div class="w-12 h-12 bg-soft rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-highlight group-hover:text-white transition-colors">
+                                <i data-lucide="linkedin" class="w-5 h-5 text-highlight group-hover:text-white transition-colors"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-primary mb-1">LinkedIn</p>
+                                <a href="#" class="text-muted hover:text-highlight transition-colors">linkedin.com/in/safan-irshad</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-10">
+                        <p class="font-medium text-primary mb-4">Follow Me</p>
+                        <div class="flex gap-3">
+                            <a href="https://www.behance.net/irshadgraphic" target="_blank" class="w-10 h-10 rounded-full bg-soft flex items-center justify-center hover:bg-highlight hover:text-white transition-all">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M22 7h-7v-2h7v2zm1.726 10c-.442 1.297-2.029 3-5.101 3-3.074 0-5.564-1.729-5.564-5.675 0-3.91 2.325-5.92 5.466-5.92 3.082 0 4.964 1.782 5.375 4.426.078.506.109 1.188.095 2.14h-8.027c.13 3.211 3.483 3.312 4.588 2.029h3.168zm-7.686-4h4.965c-.105-1.547-1.136-2.219-2.477-2.219-1.466 0-2.277.768-2.488 2.219zm-9.574 6.988h-6.466v-14.967h6.953c5.476.081 5.58 5.444 2.72 6.906 3.461 1.26 3.577 8.061-3.207 8.061zm-3.466-8.988h3.584c2.508 0 2.906-3-.312-3h-3.272v3zm3.391 3h-3.391v3.016h3.341c3.055 0 2.868-3.016.05-3.016z"/></svg>
+                            </a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-soft flex items-center justify-center hover:bg-highlight hover:text-white transition-all">
+                                <i data-lucide="linkedin" class="w-4 h-4"></i>
+                            </a>
+                            <a href="mailto:Safanirshad@gmail.com" class="w-10 h-10 rounded-full bg-soft flex items-center justify-center hover:bg-highlight hover:text-white transition-all">
+                                <i data-lucide="mail" class="w-4 h-4"></i>
+                            </a>
+                            <a href="tel:+923114610202" class="w-10 h-10 rounded-full bg-soft flex items-center justify-center hover:bg-highlight hover:text-white transition-all">
+                                <i data-lucide="phone" class="w-4 h-4"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <form id="contactForm" class="bg-soft rounded-2xl p-8">
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-primary mb-2">Your Name</label>
+                                <input type="text" required class="form-input w-full px-4 py-3 rounded-xl bg-white border border-gray-200 text-primary placeholder-muted focus:outline-none transition-all" placeholder="John Doe">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-primary mb-2">Email Address</label>
+                                <input type="email" required class="form-input w-full px-4 py-3 rounded-xl bg-white border border-gray-200 text-primary placeholder-muted focus:outline-none transition-all" placeholder="john@example.com">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-primary mb-2">Subject</label>
+                                <input type="text" required class="form-input w-full px-4 py-3 rounded-xl bg-white border border-gray-200 text-primary placeholder-muted focus:outline-none transition-all" placeholder="Project Inquiry">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-primary mb-2">Message</label>
+                                <textarea required rows="4" class="form-input w-full px-4 py-3 rounded-xl bg-white border border-gray-200 text-primary placeholder-muted focus:outline-none transition-all resize-none" placeholder="Tell me about your project..."></textarea>
+                            </div>
+                            <button type="submit" class="w-full py-4 bg-primary text-white font-medium rounded-xl hover:bg-highlight transition-all duration-300 hover:shadow-lg hover:shadow-highlight/20 flex items-center justify-center gap-2">
+                                <span id="btnText">Send Message</span>
+                                <div id="btnLoader" class="hidden w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 bg-primary text-white">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-sm opacity-60"> Safan Irshad. All rights reserved.</p>
+            <div class="flex gap-6">
+                <a href="#" class="text-sm opacity-60 hover:opacity-100 transition-opacity">Privacy Policy</a>
+                <a href="#" class="text-sm opacity-60 hover:opacity-100 transition-opacity">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed bottom-8 right-8 bg-white rounded-2xl shadow-xl p-6 flex items-center gap-4 z-50 transform translate-x-full transition-transform duration-500">
+        <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+            <i data-lucide="check" class="w-5 h-5 text-green-600"></i>
+        </div>
+        <div>
+            <h4 class="font-medium text-primary">Message Sent!</h4>
+            <p class="text-sm text-muted">I'll get back to you soon.</p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // GSAP Animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Hero text animation
+        gsap.from('.hero-text', {
+            y: 100,
+            opacity: 0,
+            duration: 1.2,
+            ease: 'power4.out',
+            delay: 0.3
+        });
+
+        // Image reveal
+        gsap.utils.toArray('.img-reveal').forEach(img => {
+            ScrollTrigger.create({
+                trigger: img,
+                start: 'top 80%',
+                onEnter: () => img.classList.add('revealed')
+            });
+        });
+
+        // Counter animation
+        const counters = document.querySelectorAll('.counter-value');
+        counters.forEach(counter => {
+            ScrollTrigger.create({
+                trigger: counter,
+                start: 'top 85%',
+                onEnter: () => {
+                    const target = parseInt(counter.getAttribute('data-target'));
+                    let current = 0;
+                    const increment = target / 60;
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= target) {
+                            counter.textContent = target + '+';
+                            clearInterval(timer);
+                        } else {
+                            counter.textContent = Math.floor(current);
+                        }
+                    }, 25);
+                },
+                once: true
+            });
+        });
+
+        // Skill bars
+        const skillBars = document.querySelectorAll('.skill-progress');
+        skillBars.forEach(bar => {
+            ScrollTrigger.create({
+                trigger: bar,
+                start: 'top 85%',
+                onEnter: () => {
+                    const width = bar.getAttribute('data-width');
+                    bar.style.width = width + '%';
+                },
+                once: true
+            });
+        });
+
+        // Stagger items
+        gsap.utils.toArray('.stagger-item').forEach((item, i) => {
+            gsap.to(item, {
+                scrollTrigger: {
+                    trigger: item,
+                    start: 'top 85%',
+                    once: true
+                },
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                delay: i * 0.1,
+                ease: 'power3.out'
+            });
+        });
+
+        // Navbar scroll
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('nav-scrolled');
+            } else {
+                navbar.classList.remove('nav-scrolled');
+            }
+        });
+
+        // Mobile menu
+        const menuBtn = document.getElementById('menuBtn');
+        const closeMenu = document.getElementById('closeMenu');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        menuBtn.addEventListener('click', () => mobileMenu.classList.add('active'));
+        closeMenu.addEventListener('click', () => mobileMenu.classList.remove('active'));
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => mobileMenu.classList.remove('active'));
+        });
+
+        // Contact form
+        const contactForm = document.getElementById('contactForm');
+        const btnText = document.getElementById('btnText');
+        const btnLoader = document.getElementById('btnLoader');
+        const toast = document.getElementById('toast');
+
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            btnText.textContent = 'Sending...';
+            btnLoader.classList.remove('hidden');
+            setTimeout(() => {
+                btnText.textContent = 'Send Message';
+                btnLoader.classList.add('hidden');
+                contactForm.reset();
+                toast.style.transform = 'translateX(0)';
+                setTimeout(() => toast.style.transform = 'translateX(120%)', 4000);
+            }, 2000);
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
